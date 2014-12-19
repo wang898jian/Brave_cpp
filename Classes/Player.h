@@ -12,7 +12,8 @@ class Player : public Sprite
 public:
 	enum PlayerType
 	{
-		PLAYER,
+		GOLDKING,
+		SABER,
 		ENEMY1,
 		ENEMY2,
 		BOSS

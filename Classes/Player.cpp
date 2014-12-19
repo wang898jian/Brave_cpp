@@ -15,14 +15,14 @@ bool Player::initWithPlayerType(PlayerType type)
 	int animationFrameNum[5] ={4, 4, 4, 2, 4};
 	int animationFrameNum2[5] ={3, 3, 3, 2, 0};
 	int animationFrameNum3[5] ={1, 5, 4, 2, 0};
-
+	int animationFrameNum4[5] ={1, 5, 4, 2, 0};
 	auto size = this->getContentSize();
 	auto body = PhysicsBody::create();
 
 	//setup according to PlayerType
 	switch(type)
 	{
-	case PlayerType::PLAYER:
+	case PlayerType::GOLDKING:
 		sfName = "player1-1-1.png";
 		_name = "player1";
 		_animationNum = 5;
@@ -32,6 +32,18 @@ bool Player::initWithPlayerType(PlayerType type)
 
 		_flip = true;
 //		this->setAnchorPoint(Vec2(0, 0));
+
+		break;
+	case PlayerType::SABER:
+		sfName = "SABER1-1-1.png";
+		_name = "SABER";
+		_animationNum = 5;
+		_animationFrameNum.assign(animationFrameNum, animationFrameNum + 5);
+		_speed = 125;
+		_isShowBar = false;
+
+		_flip = true;
+		//		this->setAnchorPoint(Vec2(0, 0));
 
 		break;
 	case PlayerType::ENEMY1:
@@ -76,7 +88,7 @@ bool Player::initWithPlayerType(PlayerType type)
 	body->setContactTestBitmask(1);
 
 	_flipped = _flip;
-	if(type == PlayerType::PLAYER)
+	if(type == PlayerType::GOLDKING||type == PlayerType::SABER)
 	{
 		body->setCategoryBitmask(1);
 		body->setContactTestBitmask(2);
@@ -100,7 +112,7 @@ bool Player::initWithPlayerType(PlayerType type)
 	}
 
 	_listener = EventListenerTouchOneByOne::create();
-	_listener->setSwallowTouches(true);
+	_listener->setSwallowTouches(false);
 	_listener->onTouchBegan = CC_CALLBACK_2(Player::onTouch,this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(_listener,this);
 
@@ -137,19 +149,21 @@ void Player::addAnimation()
 	{
 		auto animation = Animation::create();
 		animation->setDelayPerUnit(0.2f);
-		//put frames into animation
-		for(int j = 0; j< _animationFrameNum[i] ; j++)
-		{
-			auto sfName =String::createWithFormat("%s-%d-%d.png",_name.c_str(), i+1, j+1)->getCString();
-//			log(sfName);
-			auto sf = SpriteFrameCache::getInstance()->getSpriteFrameByName(sfName);
-//			auto texture = sf->getTexture();
-//			auto offset = sf->getOffset();
-//			auto rect = sf->getRect();
-//			sf = SpriteFrame::createWithTexture(texture, Rect(0 + rect.getMinX(), 38 + rect.getMinY(), 247, 163), true, offset, Size(247,163)); 
-////			this->initWithTexture(texture, Rect(0, 38, 247, 163));
-			animation->addSpriteFrame(sf);
-		}
+		//put frames into animation		
+
+			for(int j = 0; j< _animationFrameNum[i] ; j++)
+			{
+				auto sfName =String::createWithFormat("%s-%d-%d.png",_name.c_str(), i+1, j+1)->getCString();
+				//			log(sfName);
+				auto sf = SpriteFrameCache::getInstance()->getSpriteFrameByName(sfName);
+				//			auto texture = sf->getTexture();
+				//			auto offset = sf->getOffset();
+				//			auto rect = sf->getRect();
+				//			sf = SpriteFrame::createWithTexture(texture, Rect(0 + rect.getMinX(), 38 + rect.getMinY(), 247, 163), true, offset, Size(247,163)); 
+				////			this->initWithTexture(texture, Rect(0, 38, 247, 163));
+				animation->addSpriteFrame(sf);
+			}
+		
 		// put the animation into cache
 		AnimationCache::getInstance()->addAnimation(animation, String::createWithFormat("%s-%s",_name.c_str(), 
 					_animationNames[i].c_str())->getCString());
@@ -320,7 +334,7 @@ bool Player::onTouch(Touch* touch, Event* event)
 {
 	auto pos = this->convertToNodeSpace(touch->getLocation());
 	log("Touching: %f, %f...", pos.x, pos.y);
-	if(_type == PLAYER)
+	if(_type == GOLDKING || _type ==  SABER)
 		return false;
 
 	log("Player: touch detected!");
@@ -349,10 +363,6 @@ void Player::beHit(int attack)
 		_health = 0;
 		this->_progress->setProgress((float)_health/_maxHealth*100);
 		_fsm->doEvent("die");
-		if(_type == PlayerType::PLAYER)
-		{
-
-		}
 		return;
 	}
 	else

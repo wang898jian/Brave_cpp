@@ -12,7 +12,7 @@ class MainScene : public cocos2d::Layer
 {
 public:
     // there's no 'id' in cpp, so we recommend returning the class instance pointer
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene* createScene(Player::PlayerType type);
 
     // Here's a difference. Method 'init' in cocos2d-x returns bool, instead of returning 'id' in cocos2d-iphone
     virtual bool init();  
@@ -39,7 +39,7 @@ public:
 
 	void clickEnemy(Ref* obj);
 
-	void addRoles();
+	void addRoles(Player::PlayerType type);
 
 	void addUI();
 
@@ -71,6 +71,7 @@ public:
 	void addOneEnemy(Player::PlayerType type,const Vec2& pos);
 private:
 	Player* _player;
+
 	//Player* _enemy1;
 	//Player* _enemy2;
 	EventListenerTouchOneByOne* _listener_touch;

@@ -5,11 +5,18 @@
 #include "PauseLayer.h"
 #include "GameOverLayer.h"
 
-Scene* MainScene::createScene()
+Scene* MainScene::createScene(Player::PlayerType type)
 {
     // init with physics
     auto scene = Scene::createWithPhysics();
     auto layer = MainScene::create();
+	layer->addRoles(type);
+	/*layer->addUI();
+	layer->addListener();
+	layer->addObserver();
+	layer->schedule(schedule_selector(MainScene::enemyMove), 3);
+
+	layer->scheduleUpdate();*/
 	//set physics world
 	layer->setPhysicsWorld(scene->getPhysicsWorld());
     scene->addChild(layer);
@@ -23,19 +30,14 @@ bool MainScene::init()
     {
         return false;
     }
- 	//load frames into cache
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("image/role.plist","image/role.pvr.ccz");
-	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("image/ui.plist","image/ui.pvr.ccz");
-
 	initLevel();
-	addRoles();
+	//addRoles(Player::GOLDKING);
 	addUI();
 	addListener();
 	addObserver();
 	this->schedule(schedule_selector(MainScene::enemyMove), 3);
 
 	this->scheduleUpdate();
-//	_player->playAnimationForever(4);
     return true;
 }
 
@@ -134,14 +136,14 @@ bool MainScene::onContactBegin(const PhysicsContact& contact)
 	auto playerB = dynamic_cast<Player*>(contact.getShapeB()->getBody()->getNode());
 	auto typeA = playerA->getPlayerType();
 	auto typeB = playerB->getPlayerType(); 
-	if(typeA == Player::PlayerType::PLAYER)
+	if(typeA == Player::PlayerType::GOLDKING||typeA == Player::PlayerType::SABER)
 	{
 		// only one player so ShapeB must belong to an enemy		
 		log("contact enemy!");
 		playerB->setCanAttack(true);
 		playerA->addAttacker(playerB);
 	}
-	if(typeB == Player::PlayerType::PLAYER)
+	if(typeB == Player::PlayerType::GOLDKING||typeB == Player::PlayerType::SABER)
 	{
 		// only one player so ShapeA must belong to an enemy		
 		log("contact enemy!");
@@ -157,7 +159,7 @@ void MainScene::onContactSeperate(const PhysicsContact& contact)
 	auto playerB = (Player*)contact.getShapeB()->getBody()->getNode();
 	auto typeA = playerA->getPlayerType();
 	auto typeB = playerB->getPlayerType(); 
-	if(typeA == Player::PlayerType::PLAYER)
+	if(typeA == Player::PlayerType::GOLDKING||typeA == Player::PlayerType::SABER)
 	{
 		// only one player so ShapeB must belong to an enemy		
 		log("leave enemy!");
@@ -165,7 +167,7 @@ void MainScene::onContactSeperate(const PhysicsContact& contact)
 		playerA->removeAttacker(playerB);
 	}
 
-	if(typeB == Player::PlayerType::PLAYER)
+	if(typeB == Player::PlayerType::GOLDKING||typeB == Player::PlayerType::SABER)
 	{
 		// only one player so ShapeA must belong to an enemy		
 		log("leave enemy!");
@@ -203,10 +205,11 @@ void MainScene::clickEnemy(Ref* obj)
 	}
 }
 
-void MainScene::addRoles()
+void MainScene::addRoles(Player::PlayerType type)
 {
 	//add player
-	_player = Player::create(Player::PlayerType::PLAYER);
+
+	_player = Player::create(type);
 	_player->setPosition(VisibleRect::left().x + _player->getContentSize().width/2, VisibleRect::top().y/2);
 	this->addChild(_player,10);
 	addEnemyByLevel(0);
@@ -306,7 +309,7 @@ void MainScene::gotoNextLevel(Ref* obj)
 void MainScene::enemyDead(Ref* obj)
 {
 	auto player= dynamic_cast<Player*>(obj);
-	if(Player::PlayerType::PLAYER == player->getPlayerType())
+	if(Player::PlayerType::SABER == player->getPlayerType()||Player::PlayerType::GOLDKING == player->getPlayerType())
 	{
 		_player = nullptr;
 		auto layer = GameOverLayer::create();

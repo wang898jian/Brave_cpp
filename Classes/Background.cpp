@@ -11,7 +11,6 @@ bool Background::init()
 	_spriteB->setPosition(VisibleRect::center() + VisibleRect::right() - VisibleRect::left());
 	this->addChild(_spriteA,-10);
 	this->addChild(_spriteB,-20);
-
 	_isMoving = false;
 	return true;
 }
@@ -42,20 +41,24 @@ void Background::move(const char* direction, Sprite* withSprite)
 	_isMoving = true;
 
 }
-
+//modify by sa14225023
 void Background::onMoveEnd()
 {
 	_isMoving = false;
 	auto ax = _spriteA->getPosition();
 	auto pos = VisibleRect::center() + VisibleRect::right() - VisibleRect::left();
-
+	auto tmp = VisibleRect::right();
+	auto tmpl = VisibleRect::left();
 	if(ax.x < VisibleRect::left().x)
 	{
 		_spriteA->setPosition(pos);
+		_spriteA->setZOrder(-21);
+	
 	}		
 	else
 	{
 		_spriteB->setPosition(pos);
+		_spriteA->setZOrder(-10);
 	}
 		
 
