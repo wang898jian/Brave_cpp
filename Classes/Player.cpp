@@ -15,7 +15,7 @@ bool Player::initWithPlayerType(PlayerType type)
 	int animationFrameNum[5] ={4, 4, 4, 2, 4};
 	int animationFrameNum2[5] ={3, 3, 3, 2, 0};
 	int animationFrameNum3[5] ={1, 5, 4, 2, 0};
-	int animationFrameNum4[5] ={1, 5, 4, 2, 0};
+	int animationFrameNum4[5] ={4, 4, 2, 2, 0};
 	auto size = this->getContentSize();
 	auto body = PhysicsBody::create();
 
@@ -35,8 +35,8 @@ bool Player::initWithPlayerType(PlayerType type)
 
 		break;
 	case PlayerType::SABER:
-		sfName = "SABER1-1-1.png";
-		_name = "SABER";
+		sfName = "player2-1-1.png";
+		_name = "player2";
 		_animationNum = 5;
 		_animationFrameNum.assign(animationFrameNum, animationFrameNum + 5);
 		_speed = 125;

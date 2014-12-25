@@ -112,6 +112,7 @@ void FSM::setOnEnter(std::string state, std::function<void()> onEnter)
 	if(isContainState(state))
 	{
 		_onEnters[state] = onEnter;
+		cocos2d::log("FSM::setOnEnter: state named %s", state.c_str());
 	}
 	else
 	{
@@ -142,6 +143,7 @@ bool FSM::init()
 		->addEvent("die","beingHit","dead")
 		->addEvent("stop","beingHit","idle")
 		->addEvent("stop","idle","idle");
+
 
 	return true;
 }

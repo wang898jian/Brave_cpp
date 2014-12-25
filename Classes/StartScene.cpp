@@ -13,6 +13,7 @@ bool StartScene::init()
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("image/ui.plist","image/ui.pvr.ccz");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("image/saber.plist","image/saber.pvr.ccz");
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("image/heroking.plist","image/heroking.pvr.ccz");
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("image/player2.plist","image/player2.pvr.ccz");
 	auto background = Sprite::create("image/select1.jpg");
 	background->setPosition(VisibleRect::center());
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("image/start_button.plist","image/start_button.pvr.ccz");
